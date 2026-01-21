@@ -24,7 +24,6 @@ function Signup() {
 
       if (res.ok) {
         alert("Signup successful ✅");
-        // reset form fields
         setN("");
         setE("");
         setP("");
