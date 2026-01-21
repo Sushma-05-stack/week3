@@ -1,78 +1,79 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 
 function Signup() {
-  let [n, setN] = useState("test");
-  let [e, setE] = useState("test@gmail.com");
-  let [p, setP] = useState("password");
+  const [n, setN] = useState("test");
+  const [e, setE] = useState("test@gmail.com");
+  const [p, setP] = useState("password");
 
-async  function submitHandler() {
-    let objData = {
+  async function submitHandler() {
+    const objData = {
       name: n,
       email: e,
       password: p,
     };
-    console.log(" object : " + JSON.stringify(objData,null,2));
-    try{
-      let res= await  fetch("http://localhost:4040/api/signup",
-        {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify(objData)
+    console.log("Object to send:", JSON.stringify(objData, null, 2));
+
+    try {
+      const res = await fetch("http://localhost:4040/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(objData),
+      });
+
+      const dataText = await res.text();
+
+      if (res.ok) {
+        alert("Signup successful ✅");
+        // reset form fields
+        setN("");
+        setE("");
+        setP("");
+      } else {
+        alert("Signup failed ❌");
       }
-    )
-    let dataText=await res.text();
-    console.log("\n\t res = "+dataText)
 
-    }catch{
-      console.log("\n\t error")
+      console.log("Response:", dataText);
+    } catch (err) {
+      console.error("Error during signup:", err);
+      alert("Signup failed ❌\nCheck console for details");
     }
-
-
   }
 
   return (
-    <>
-      <div>
-        <h3>create account</h3>
-        <input
-          type="text"
-          placeholder="name"
-          onChange={(e) => {
-            // console.log("name : " + e.target.value);
-            setN(e.target.value);
-          }}
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="email"
-          onChange={(e) => {
-            // console.log("name : " + e.target.value);
-            setE(e.target.value);
-          }}
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="password"
-          onChange={(e) => {
-            // console.log("name : " + e.target.value);
-            setP(e.target.value);
-          }}
-        />
-        <br />
-        <br />
-        <button onClick={submitHandler}>submit</button>
-        <br />
-        <br />
-        <div>name : {n}</div>
-        <div>name : {e}</div>
-        <div>name : {p}</div>
-      </div>
-    </>
+    <div style={{ padding: "20px" }}>
+      <h3>Create Account</h3>
+
+      <input
+        type="text"
+        placeholder="Name"
+        value={n}
+        onChange={(e) => setN(e.target.value)}
+      />
+      <br />
+      <input
+        type="email"
+        placeholder="Email"
+        value={e}
+        onChange={(e) => setE(e.target.value)}
+      />
+      <br />
+      <input
+        type="password"
+        placeholder="Password"
+        value={p}
+        onChange={(e) => setP(e.target.value)}
+      />
+      <br />
+      <br />
+      <button onClick={submitHandler}>Submit</button>
+      <br />
+      <br />
+      <div>Name: {n}</div>
+      <div>Email: {e}</div>
+      <div>Password: {p}</div>
+    </div>
   );
 }
 
 export default Signup;
+

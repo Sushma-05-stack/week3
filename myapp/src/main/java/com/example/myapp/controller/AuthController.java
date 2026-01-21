@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.myapp.dto.LoginData;
+import com.example.myapp.dto.LoginRequest;
 import com.example.myapp.dto.SignupRequest;
 import com.example.myapp.model.User;
 import com.example.myapp.repo.UserRepository;
@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginData data) {
+    public String login(@RequestBody LoginRequest data) {
 
         User user = db.findByEmail(data.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
