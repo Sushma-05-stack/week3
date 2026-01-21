@@ -1,20 +1,40 @@
 package com.example.myapp.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.myapp.dto.LoginData;
 import com.example.myapp.dto.SignupRequest;
+import com.example.myapp.model.User;
+import com.example.myapp.repo.UserRepository;
 
 @RestController
 public class AuthController {
-    @PostMapping("/signup")
-    String signUp(@RequestBody SignupRequest sd){
-        System.out.println("\n\t signup DATA : "+sd.toString());
-        return "signup sucess -> : { \n\t name :"+sd.getName()+"\n\t email : "+sd.getEmail()+"\n}";
 
+    private final UserRepository db;
+
+    public AuthController(UserRepository db) {
+        this.db = db;
     }
 
-    
+    @PostMapping("/signup")
+    public String signUp(@RequestBody SignupRequest sd) {
+        return "signup success -> : { \n\t name : " + sd.getName()
+                + "\n\t email : " + sd.getEmail() + "\n}";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginData data) {
+
+        User user = db.findByEmail(data.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(data.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return "Login successful";
+    }
 }
+
